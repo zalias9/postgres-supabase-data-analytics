@@ -4,7 +4,9 @@ WITH
       SUM(sales_amount)::money AS total_sales,
       SUM(quantity) AS total_quantity,
       ROUND(AVG(price), 2)::money AS avg_price,
-      COUNT(distinct order_number) AS total_orders
+      COUNT(distinct order_number) AS total_orders,
+      MIN(order_date) AS first_order_date,
+      MAX(order_date) AS last_order_date
     FROM
       gold.fact_sales
   ),
@@ -45,6 +47,18 @@ FROM
   metrics
 UNION ALL
 SELECT
+  'First Order Date',
+  first_order_date::text
+FROM
+  metrics
+UNION ALL
+SELECT
+  'Last Order Date',
+  last_order_date::text
+FROM
+  metrics
+UNION ALL
+SELECT
   'Total Products',
   total_products::text
 FROM
@@ -58,12 +72,14 @@ FROM
 
 /* Results:
 ====================================
-| measure_name    | measure_value  |
-| --------------- | -------------- |
-| Total Sales     | $29,356,250.00 |
-| Total Quantity  | 60423          |
-| Average Price   | $486.04        |
-| Total Orders    | 27659          |
-| Total Products  | 295            |
-| Total Customers | 18484          |
+| measure_name     | measure_value  |
+| ---------------- | -------------- |
+| Total Sales      | $29,356,250.00 |
+| Total Quantity   | 60423          |
+| Average Price    | $486.04        |
+| Total Orders     | 27659          |
+| First Order Date | 2020-12-29     |
+| Last Order Date  | 2024-01-28     |
+| Total Products   | 295            |
+| Total Customers  | 18484          |
 */
